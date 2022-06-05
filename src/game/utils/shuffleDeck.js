@@ -1,0 +1,1 @@
+export const shuffle = (deck) => deck.sort((a, b) => 0.5 - Math.random());
