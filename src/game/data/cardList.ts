@@ -1,4 +1,6 @@
-export const GW2Cards = [
+import type { Card } from "../models/card";
+
+export const GW2Cards: Card[] = [
   {
     id: 0,
     name: "Caithe",
@@ -38,5 +40,5 @@ export const GW2Cards = [
   {
     id: 9,
     name: "Aurene",
-  }
+  },
 ];

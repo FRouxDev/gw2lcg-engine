@@ -1,8 +1,8 @@
-import DeckManager from "@/views/DeckManager.vue";
-import GameBoard from "@/views/GameBoard.vue";
-import NewGame from "@/views/NewGame.vue";
+import DeckManager from "@/views/deck-manager/DeckManager.vue";
+import GameBoard from "@/views/game-board/GameBoard.vue";
+import NewGame from "@/views/new-game/NewGame.vue";
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import HomeView from "../views/home/HomeView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
