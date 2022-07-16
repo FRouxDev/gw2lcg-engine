@@ -2,9 +2,9 @@
 defineProps({
   title: String,
   display: Boolean,
-  cancel: { type: String, default: 'Annuler' },
-  confirm: { type: String, default: 'Valider' },
-  confirmEnabled: Boolean,
+  cancel: { type: String, default: 'Cancel' },
+  confirm: { type: String, default: 'Confirm' },
+  confirmEnabled: { type: Boolean, default: true },
 });
 
 defineEmits(['modal-close', 'modal-submit']);
@@ -30,7 +30,7 @@ defineEmits(['modal-close', 'modal-submit']);
 <style lang="scss">
 .modal {
   position: fixed;
-  z-index: 1;
+  z-index: 10;
   left: 0;
   top: 0;
   width: 100%;

@@ -1,7 +1,7 @@
 export interface CardSet {
   name: string;
   type: string;
-  cards: any[];
+  cards?: any[];
   uuid?: string;
 }
 

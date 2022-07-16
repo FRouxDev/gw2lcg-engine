@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import MenuItem from '@/components/menu/MenuItem.vue';
-import GameModal from '@/components/GameModal.vue';
+import GenericModal from '@/components/GenericModal.vue';
 import { ref } from 'vue';
 import { decks as availableDecks } from '@/game/data/decks';
 import type { DeckList } from '@/game/models/deckList';
@@ -30,7 +30,7 @@ const chosenDeck = ref();
 
 <template>
   <div class="menu">
-    <game-modal
+    <generic-modal
       title="Choisissez votre deck."
       :display="displayModal"
       @modal-close="closeModal"
@@ -43,7 +43,7 @@ const chosenDeck = ref();
           <el-option v-for="deck of decks" :key="deck.deckId" :label="deck.deckName" :value="deck.deckId" />
         </el-select>
       </div>
-    </game-modal>
+    </generic-modal>
     <menu-item @menu-click="startNewGame" label="Start New Game" first />
     <el-divider class="menu__divider" />
     <menu-item @menu-click="loadSavedGame" label="Load Saved Game" />

@@ -3,7 +3,7 @@ import axios from 'axios';
 const baseUrl = import.meta.env.VITE_APP_API_URL || 'http://localhost:3000/';
 
 class HttpRequestService {
-  async get(path: string, bodyParams = {}, queryParams = {}): Promise<any> {
+  async get(path: string, queryParams = {}, bodyParams = {}): Promise<any> {
     const axiosConfig = {
       params: queryParams,
       data: bodyParams,
@@ -34,7 +34,7 @@ class HttpRequestService {
     }
   }
 
-  async put(path: string, bodyParams = {}, queryParams = {}): Promise<any> {
+  async put(path: string, queryParams = {}, bodyParams = {}): Promise<any> {
     const axiosConfig = {
       params: queryParams,
       data: bodyParams,
@@ -50,7 +50,7 @@ class HttpRequestService {
     }
   }
 
-  async delete(path: string, bodyParams = {}, queryParams = {}): Promise<any> {
+  async delete(path: string, queryParams = {}, bodyParams = {}): Promise<any> {
     const axiosConfig = {
       params: queryParams,
       data: bodyParams,
