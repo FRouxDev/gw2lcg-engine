@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import AdminMenu from "./components/AdminMenu.vue";
-import GW2Logo from "@/assets/img/gw2-eod-logo.png";
+import AdminMenu from './components/AdminMenu.vue';
+import GW2Logo from '@/assets/img/gw2-eod-logo.png';
 </script>
 
 <template>

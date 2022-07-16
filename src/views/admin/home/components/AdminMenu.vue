@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { useRouter } from "vue-router";
-import MenuItem from "@/components/menu/MenuItem.vue";
+import { useRouter } from 'vue-router';
+import MenuItem from '@/components/menu/MenuItem.vue';
 
 const router = useRouter();
 
 // Component Methods
-const manageSets = () => router.push("/new-game");
-const manageCards = () => router.push("/new-game");
-const importCards = () => router.push("/new-game");
-const back = () => router.push("/");
+const manageSets = () => router.push('/admin/sets-management');
+const manageCards = () => router.push('/new-game');
+const importCards = () => router.push('/new-game');
+const back = () => router.push('/');
 </script>
 
 <template>

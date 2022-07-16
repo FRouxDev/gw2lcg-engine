@@ -1,8 +1,8 @@
-import { shuffle } from "../utils/shuffleDeck";
-import { v4 as uuid } from "uuid";
-import type { Card } from "../models/card";
-import type { DeckList, CardEntry } from "../models/deckList";
-import { GW2Cards } from "../data/cardList";
+import { shuffle } from '../utils/shuffleDeck';
+import { v4 as uuid } from 'uuid';
+import type { Card } from '../models/card';
+import type { DeckList, CardEntry } from '../models/deckList';
+import { GW2Cards } from '../data/cardList';
 
 class Player {
   playerName: string;

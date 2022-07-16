@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios from 'axios';
 
-const baseUrl = import.meta.env.VITE_APP_API_URL || "http://localhost:3000/";
+const baseUrl = import.meta.env.VITE_APP_API_URL || 'http://localhost:3000/';
 
 class HttpRequestService {
   async get(path: string, bodyParams = {}, queryParams = {}): Promise<any> {

@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { useRouter } from "vue-router";
-import MenuItem from "@/components/menu/MenuItem.vue";
-import GameModal from "@/components/GameModal.vue";
-import { ref } from "vue";
-import { decks as availableDecks } from "@/game/data/decks";
-import type { DeckList } from "@/game/models/deckList";
+import { useRouter } from 'vue-router';
+import MenuItem from '@/components/menu/MenuItem.vue';
+import GameModal from '@/components/GameModal.vue';
+import { ref } from 'vue';
+import { decks as availableDecks } from '@/game/data/decks';
+import type { DeckList } from '@/game/models/deckList';
 
 const router = useRouter();
 
 // Component Methods
-const startNewGame = () => router.push("/new-game");
+const startNewGame = () => router.push('/new-game');
 const loadSavedGame = () => {
   displayModal.value = true;
 };
-const goToAdmin = () => router.push("/admin");
-const openDeckManager = () => router.push("/deck-manager");
-const openSettings = () => console.log("Settings");
+const goToAdmin = () => router.push('/admin');
+const openDeckManager = () => router.push('/deck-manager');
+const openSettings = () => console.log('Settings');
 const quitGame = () => window.close();
 const closeModal = () => {
   displayModal.value = false;
@@ -39,18 +39,8 @@ const chosenDeck = ref();
     >
       <div>
         <p>Selected deck : {{ chosenDeck }}</p>
-        <el-select
-          class="m-2"
-          placeholder="Choisissez un deck..."
-          size="large"
-          v-model="chosenDeck"
-        >
-          <el-option
-            v-for="deck of decks"
-            :key="deck.deckId"
-            :label="deck.deckName"
-            :value="deck.deckId"
-          />
+        <el-select class="m-2" placeholder="Choisissez un deck..." size="large" v-model="chosenDeck">
+          <el-option v-for="deck of decks" :key="deck.deckId" :label="deck.deckName" :value="deck.deckId" />
         </el-select>
       </div>
     </game-modal>

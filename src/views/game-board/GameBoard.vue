@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import HandView from "./components/HandView.vue";
+import HandView from './components/HandView.vue';
 </script>
 
 <template>

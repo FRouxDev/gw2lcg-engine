@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed } from 'vue';
 
 const props = defineProps({
   first: { type: Boolean, default: false },
@@ -7,12 +7,12 @@ const props = defineProps({
   label: String,
 });
 
-defineEmits(["menu-click"]);
+defineEmits(['menu-click']);
 
 const extraClasses = computed(() => {
   return {
-    "item--first": !!props.first,
-    "item--last": !!props.last,
+    'item--first': !!props.first,
+    'item--last': !!props.last,
   };
 });
 </script>

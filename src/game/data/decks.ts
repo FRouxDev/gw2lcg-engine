@@ -1,9 +1,9 @@
-import type { DeckList } from "../models/deckList";
+import type { DeckList } from '../models/deckList';
 
 export const decks: DeckList[] = [
   {
-    deckId: "zojja",
-    deckName: "Zojja & Friends",
+    deckId: 'zojja',
+    deckName: 'Zojja & Friends',
     cards: [
       {
         cardId: 5,
@@ -20,8 +20,8 @@ export const decks: DeckList[] = [
     ],
   },
   {
-    deckId: "rytlock",
-    deckName: "Bromance",
+    deckId: 'rytlock',
+    deckName: 'Bromance',
     cards: [
       {
         cardId: 0,
@@ -38,8 +38,8 @@ export const decks: DeckList[] = [
     ],
   },
   {
-    deckId: "thepack",
-    deckName: "The Pact",
+    deckId: 'thepack',
+    deckName: 'The Pact',
     cards: [
       {
         cardId: 4,

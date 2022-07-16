@@ -2,12 +2,12 @@
 defineProps({
   title: String,
   display: Boolean,
-  cancel: { type: String, default: "Annuler" },
-  confirm: { type: String, default: "Valider" },
+  cancel: { type: String, default: 'Annuler' },
+  confirm: { type: String, default: 'Valider' },
   confirmEnabled: Boolean,
 });
 
-defineEmits(["modal-close", "modal-submit"]);
+defineEmits(['modal-close', 'modal-submit']);
 </script>
 
 <template>
@@ -19,11 +19,7 @@ defineEmits(["modal-close", "modal-submit"]);
         <el-button @click="$emit('modal-close')" type="danger">
           {{ cancel }}
         </el-button>
-        <el-button
-          @click="$emit('modal-submit')"
-          type="primary"
-          :disabled="!confirmEnabled"
-        >
+        <el-button @click="$emit('modal-submit')" type="primary" :disabled="!confirmEnabled">
           {{ confirm }}
         </el-button>
       </div>
