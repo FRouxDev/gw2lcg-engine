@@ -1,1 +1,1 @@
-export const HEADLESS_ROUTES: string[] = ["home"];
+export const HEADLESS_ROUTES: string[] = ["home", "admin-home"];

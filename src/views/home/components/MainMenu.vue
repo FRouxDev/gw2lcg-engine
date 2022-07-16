@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import MenuItem from "./MenuItem.vue";
-import GameModal from "../../../components/GameModal.vue";
+import MenuItem from "@/components/menu/MenuItem.vue";
+import GameModal from "@/components/GameModal.vue";
 import { ref } from "vue";
 import { decks as availableDecks } from "@/game/data/decks";
 import type { DeckList } from "@/game/models/deckList";
@@ -13,6 +13,7 @@ const startNewGame = () => router.push("/new-game");
 const loadSavedGame = () => {
   displayModal.value = true;
 };
+const goToAdmin = () => router.push("/admin");
 const openDeckManager = () => router.push("/deck-manager");
 const openSettings = () => console.log("Settings");
 const quitGame = () => window.close();
@@ -57,11 +58,13 @@ const chosenDeck = ref();
     <el-divider class="menu__divider" />
     <menu-item @menu-click="loadSavedGame" label="Load Saved Game" />
     <el-divider class="menu__divider" />
+    <menu-item @menu-click="goToAdmin" label="Administration Board" />
+    <el-divider class="menu__divider" />
     <menu-item @menu-click="openDeckManager" label="Open Deck Manager" />
     <el-divider class="menu__divider" />
     <menu-item @menu-click="openSettings" label="Settings" />
     <el-divider class="menu__divider" />
-    <menu-item @menu-click="quitGame" label="Quit" />
+    <menu-item @menu-click="quitGame" label="Quit" last />
   </div>
 </template>
 

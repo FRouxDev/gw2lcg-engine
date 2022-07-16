@@ -1,3 +1,4 @@
+import AdminHomeView from "@/views/admin/home/AdminHomeView.vue";
 import DeckManager from "@/views/deck-manager/DeckManager.vue";
 import GameBoard from "@/views/game-board/GameBoard.vue";
 import NewGame from "@/views/new-game/NewGame.vue";
@@ -26,6 +27,11 @@ const router = createRouter({
       path: "/deck-manager",
       name: "deck-manager",
       component: DeckManager,
+    },
+    {
+      path: "/admin",
+      name: "admin-home",
+      component: AdminHomeView,
     },
   ],
 });
