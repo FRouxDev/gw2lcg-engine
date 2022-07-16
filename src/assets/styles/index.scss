@@ -1,14 +1,6 @@
-:root {
-  --ep-color-primary: red;
-}
-
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: $coreFont;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
-}
-
-a {
-  color: var(--ep-color-primary);
 }

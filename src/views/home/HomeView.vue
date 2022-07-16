@@ -18,7 +18,7 @@ import GW2Logo from "../../assets/img/gw2-eod-logo.png";
   height: 100%;
 
   &__menu {
-    margin-top: 24px;
+    margin-top: $defaultMargin * 3;
     width: 25%;
     margin: auto;
   }

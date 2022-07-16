@@ -1,0 +1,25 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto|Open+Sans:400italic,700italic,400,700);
+$coreFont: "Roboto", serif;
+
+$darkTeal: #1e9995;
+$lightTeal: #19d3bf;
+$black: #000000;
+$darkGrey: #333333;
+$lightGrey: #cccccc;
+$white: #ffffff;
+
+$defaultSize: 12px;
+$mediumSize: 18px;
+$largeSize: 24px;
+
+$xsMargin: 2px;
+$smMargin: 4px;
+$defaultMargin: 8px;
+$xlMargin: 24px;
+$defaultRadius: 12px;
+
+$defaultBoxShadow: $smMargin $smMargin 4px $darkGrey;
+$textShadowDark: $xsMargin $xsMargin 1px $darkGrey;
+$textShadowLight: $xsMargin $xsMargin 1px $lightGrey;
+
+$modalOpacity: 0.6;

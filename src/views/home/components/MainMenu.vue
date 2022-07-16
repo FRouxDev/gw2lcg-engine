@@ -1,55 +1,80 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import { ElMenu } from "element-plus";
+import MenuItem from "./MenuItem.vue";
+import GameModal from "../../../components/GameModal.vue";
+import { ref } from "vue";
+import { decks as availableDecks } from "@/game/data/decks";
+import type { DeckList } from "@/game/models/deckList";
+
 const router = useRouter();
 
+// Component Methods
 const startNewGame = () => router.push("/new-game");
-const loadSavedGame = () => console.log("Load saved game");
+const loadSavedGame = () => {
+  displayModal.value = true;
+};
 const openDeckManager = () => router.push("/deck-manager");
+const openSettings = () => console.log("Settings");
+const quitGame = () => window.close();
+const closeModal = () => {
+  displayModal.value = false;
+  chosenDeck.value = undefined;
+};
+
+// Component Data
+const displayModal = ref(false);
+const decks = ref<DeckList[]>(availableDecks);
+const chosenDeck = ref();
 </script>
 
 <template>
-  <div>
-    <el-menu mode="vertical" class="menu">
-      <el-menu-item
-        index="new-game"
-        @click="startNewGame"
-        class="menu__item menu__item--first"
-      >
-        New Game
-      </el-menu-item>
-      <el-menu-item
-        index="load-saved"
-        @click="loadSavedGame"
-        class="menu__item"
-      >
-        Load Saved Game
-      </el-menu-item>
-      <el-menu-item
-        index="deck-manager"
-        @click="openDeckManager"
-        class="menu__item menu__item--last"
-      >
-        Deck Manager
-      </el-menu-item>
-    </el-menu>
+  <div class="menu">
+    <game-modal
+      title="Choisissez votre deck."
+      :display="displayModal"
+      @modal-close="closeModal"
+      confirm="Démarrer"
+      :confirm-enabled="!!chosenDeck"
+    >
+      <div>
+        <p>Selected deck : {{ chosenDeck }}</p>
+        <el-select
+          class="m-2"
+          placeholder="Choisissez un deck..."
+          size="large"
+          v-model="chosenDeck"
+        >
+          <el-option
+            v-for="deck of decks"
+            :key="deck.deckId"
+            :label="deck.deckName"
+            :value="deck.deckId"
+          />
+        </el-select>
+      </div>
+    </game-modal>
+    <menu-item @menu-click="startNewGame" label="Start New Game" first />
+    <el-divider class="menu__divider" />
+    <menu-item @menu-click="loadSavedGame" label="Load Saved Game" />
+    <el-divider class="menu__divider" />
+    <menu-item @menu-click="openDeckManager" label="Open Deck Manager" />
+    <el-divider class="menu__divider" />
+    <menu-item @menu-click="openSettings" label="Settings" />
+    <el-divider class="menu__divider" />
+    <menu-item @menu-click="quitGame" label="Quit" />
   </div>
 </template>
 
 <style lang="scss">
 .menu {
-  border-radius: 12px;
-  &__item {
-    font-weight: bold;
-    --el-menu-hover-bg-color: #1e9995;
+  border-radius: $defaultRadius;
+  background-color: $white;
+  box-shadow: $defaultBoxShadow;
 
-    &--first {
-      border-radius: 12px 12px 0px 0px;
-    }
-
-    &--last {
-      border-radius: 0px 0px 12px 12px;
-    }
+  &__divider {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    height: 0px;
   }
 }
 </style>

@@ -7,14 +7,14 @@ console.log(route);
 
 <template>
   <div>
-    <el-container>
+    <el-container class="app">
       <el-header v-if="!HEADLESS_ROUTES.includes(route.name as string)">
         <el-menu mode="horizontal" router>
           <el-menu-item index="/">Home</el-menu-item>
           <el-menu-item index="/new-game">New Game</el-menu-item>
         </el-menu>
       </el-header>
-      <el-main class="app-main">
+      <el-main class="app__main">
         <RouterView />
       </el-main>
     </el-container>
@@ -22,10 +22,13 @@ console.log(route);
 </template>
 
 <style lang="scss">
-.app-main {
-  margin: 0px;
-  padding: 0px;
+.app {
   height: 100vh;
-  background-image: url("../src/assets/img/shing-jea-wallpaper.jpg");
+  &__main {
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    background-image: url("../src/assets/img/shing-jea-wallpaper.jpg");
+  }
 }
 </style>
