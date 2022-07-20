@@ -1,3 +1,4 @@
+import CardsManagementView from '@/views/admin/cards-management/CardsManagementView.vue';
 import AdminHomeView from '@/views/admin/home/AdminHomeView.vue';
 import SetsManagementView from '@/views/admin/sets-management/SetsManagementView.vue';
 import DeckManager from '@/views/deck-manager/DeckManager.vue';
@@ -38,6 +39,11 @@ const router = createRouter({
       path: '/admin/sets-management',
       name: 'sets-management',
       component: SetsManagementView,
+    },
+    {
+      path: '/admin/cards-management',
+      name: 'cards-management',
+      component: CardsManagementView,
     },
   ],
 });

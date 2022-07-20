@@ -6,7 +6,7 @@ const router = useRouter();
 
 // Component Methods
 const manageSets = () => router.push('/admin/sets-management');
-const manageCards = () => router.push('/new-game');
+const manageCards = () => router.push('/admin/cards-management');
 const importCards = () => router.push('/new-game');
 const back = () => router.push('/');
 </script>
