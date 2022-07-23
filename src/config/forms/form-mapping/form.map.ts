@@ -11,13 +11,13 @@ import {
 } from './form.mapping';
 
 export const FORM_MAP = {
-  card: cardForm,
-  hero: heroForm,
-  ally: allyForm,
-  event: eventForm,
-  attachment: attachmentForm,
-  enemy: enemyForm,
-  location: locationForm,
-  treachery: treacheryForm,
-  quest: questForm,
+  Card: cardForm,
+  Hero: heroForm,
+  Ally: allyForm,
+  Event: eventForm,
+  Attachment: attachmentForm,
+  Enemy: enemyForm,
+  Location: locationForm,
+  Treachery: treacheryForm,
+  Quest: questForm,
 };

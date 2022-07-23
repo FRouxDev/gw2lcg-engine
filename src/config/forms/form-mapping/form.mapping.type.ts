@@ -4,7 +4,7 @@ import type { CardType } from '@/game/models/types/cardType.type';
 import type { Sphere } from '@/game/models/types/sphere.type';
 
 export interface CardSetOption {
-  value: CardSet['uuid'];
+  value: string;
   label: CardSet['name'];
 }
 
@@ -31,12 +31,16 @@ export interface InputMapping {
   label?: string;
 }
 
+export interface SetMapping {
+  options: CardSetOption[];
+}
+
 export interface FormMapping {
-  name?: InputMapping;
-  set?: InputMapping;
-  traits?: InputMapping;
-  cardNumber?: InputMapping;
-  type?: InputMapping;
+  name: InputMapping;
+  set: InputMapping & SetMapping;
+  traits: InputMapping;
+  cardNumber: InputMapping;
+  type: InputMapping;
   unique?: InputMapping;
   sphere?: InputMapping;
   keywords?: InputMapping;

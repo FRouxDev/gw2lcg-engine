@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import httpRequestService from '@/services/httpRequest.service';
 import type { Card } from '@/game/models/card';
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref, computed, watch } from 'vue';
 import GenericModal from '@/components/GenericModal.vue';
+import type { CardSetOption, FormMapping } from '@/config/forms/form-mapping/form.mapping.type';
+import { cardForm } from '@/config/forms/form-mapping/form.mapping';
+import type { CardSet } from '@/game/models/cardSet';
+import { ModalSize } from '@/config/types/modalSize.type';
+import { FORM_MAP } from '@/config/forms/form-mapping/form.map';
 
 // Component local data
 const cardsData = ref<Array<Card>>([]);
+const cardSets = ref<Array<CardSet>>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const confirm = ref<string | null>(null);
@@ -14,23 +20,35 @@ const isDeleteModalVisible = ref(false);
 const pendingDeleteUuid = ref<string | null>(null);
 
 const isCreateModalVisible = ref(false);
+const cardFormMapper = ref<FormMapping>(cardForm);
 const createdCardObject = ref<Partial<Card>>({});
 
 // Component local computed
-const formattedData = computed(() => {
-  return '';
-});
-
 const iscreatedCardObjectOk = computed(() => {
   return !!(createdCardObject.value.name && createdCardObject.value.type);
 });
+
+// Component watchers
+watch(
+  () => createdCardObject.value.type,
+  (newType) => {
+    console.log(newType);
+    if (FORM_MAP[newType as keyof typeof FORM_MAP]) {
+      cardFormMapper.value = FORM_MAP[newType as keyof typeof FORM_MAP];
+      loadSetsData();
+    }
+  },
+);
 
 // Initiates or refreshes sets data
 const loadCardsData = async () => {
   try {
     const { cards } = await httpRequestService.get('cards');
+    const { sets } = await httpRequestService.get('sets');
     loading.value = false;
     cardsData.value = cards;
+    cardSets.value = sets;
+    loadSetsData();
   } catch (e) {
     if (e instanceof Error) {
       error.value = e.message as string;
@@ -40,6 +58,13 @@ const loadCardsData = async () => {
     }
     loading.value = true;
   }
+};
+
+const loadSetsData = () => {
+  cardFormMapper.value.set.options = cardSets.value.map((set: CardSet) => {
+    const cardSetOptions: CardSetOption = { value: set.uuid || '', label: set.name };
+    return cardSetOptions;
+  });
 };
 
 // Action handlers
@@ -63,13 +88,13 @@ const confirmCreate = async () => {
       error.value = e;
     }
   }
-  createdCardObject.value = {};
-  isCreateModalVisible.value = false;
+  closeCreateModal();
 };
 
 const closeCreateModal = () => {
   createdCardObject.value = {};
   isCreateModalVisible.value = false;
+  cardFormMapper.value = cardForm;
 };
 
 // Delete set handlers
@@ -112,19 +137,51 @@ onMounted(() => loadCardsData());
       @modal-close="closeCreateModal"
       @modal-submit="confirmCreate"
       :confirm-enabled="iscreatedCardObjectOk"
+      :modalSize="ModalSize.MEDIUM"
     >
       <div>
         <el-form :model="createdCardObject" label-width="120px">
-          <el-form-item label="Card name">
-            <el-input v-model="createdCardObject.name" placeholder="Card name" />
+          <el-form-item
+            v-for="[key, mapping] of Object.entries(cardFormMapper).slice(0, 5)"
+            :key="key"
+            :label="mapping.label"
+          >
+            <component
+              :is="mapping.component"
+              :options="mapping.options"
+              v-model="createdCardObject[key as keyof Card]"
+            />
           </el-form-item>
-          <el-form-item label="Card type">
-            <el-select class="m-2" placeholder="Card type" v-model="createdCardObject.type">
-              <el-option label="Player Set" value="player" />
-              <el-option label="Encounter Set" value="encounter" />
-              <el-option label="Special Set" value="special" />
-            </el-select>
-          </el-form-item>
+          <el-divider />
+          <el-row>
+            <el-col :span="12">
+              <el-form-item
+                v-for="[key, mapping] of Object.entries(cardFormMapper).slice(5, 10)"
+                :key="key"
+                :label="mapping.label"
+              >
+                <component
+                  :is="mapping.component"
+                  :options="mapping.options"
+                  v-model="createdCardObject[key as keyof Card]"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item
+                v-for="[key, mapping] of Object.entries(cardFormMapper).slice(10)"
+                :key="key"
+                :label="mapping.label"
+              >
+                <component
+                  :is="mapping.component"
+                  :options="mapping.options"
+                  v-model="createdCardObject[key as keyof Card]"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-divider v-if="createdCardObject.type" />
         </el-form>
       </div>
     </generic-modal>
@@ -150,16 +207,12 @@ onMounted(() => loadCardsData());
           <el-alert v-if="confirm" :title="confirm" type="success" @close="confirm = null" show-icon />
           <el-alert v-if="error" :title="confirm" type="error" @close="error = null" show-icon />
         </div>
-        <el-table
-          v-loading="loading"
-          :data="formattedData"
-          :default-sort="{ prop: 'name', order: 'descending' }"
-          stripe
-        >
-          <el-table-column prop="name" label="Set name" width="180" sortable />
-          <el-table-column prop="type" label="Set type" width="120" sortable />
-          <el-table-column prop="uuid" label="Set UUID" />
-          <el-table-column prop="nbOfCards" label="Nb. of cards" align="center" width="140" sortable />
+        <el-table v-loading="loading" :data="cardsData" :default-sort="{ prop: 'name', order: 'descending' }" stripe>
+          <el-table-column prop="name" label="Card name" width="180" sortable />
+          <el-table-column prop="set.name" label="Card Set" width="180" sortable />
+          <el-table-column prop="type" label="Type" width="120" sortable />
+          <el-table-column prop="sphere" label="Sphere" width="140" sortable />
+          <el-table-column prop="uuid" label="UUID" />
           <el-table-column fixed="right" label="Operations" width="180">
             <template #default="scope">
               <el-button link type="primary" size="small" @click="seeDetails"> Detail </el-button>

@@ -1,10 +1,22 @@
 <script setup lang="ts">
-defineProps({
+import { computed, type PropType } from 'vue';
+import { ModalSize } from '@/config/types/modalSize.type';
+
+const props = defineProps({
   title: String,
   display: Boolean,
   cancel: { type: String, default: 'Cancel' },
   confirm: { type: String, default: 'Confirm' },
   confirmEnabled: { type: Boolean, default: true },
+  modalSize: { type: String as PropType<ModalSize>, default: ModalSize.SMALL },
+});
+
+const sizeClass = computed(() => {
+  return {
+    'modal__content--small': props.modalSize === ModalSize.SMALL,
+    'modal__content--medium': props.modalSize === ModalSize.MEDIUM,
+    'modal__content--large': props.modalSize === ModalSize.LARGE,
+  };
 });
 
 defineEmits(['modal-close', 'modal-submit']);
@@ -12,7 +24,7 @@ defineEmits(['modal-close', 'modal-submit']);
 
 <template>
   <div class="modal" v-if="display">
-    <div class="modal__content">
+    <div class="modal__content" :class="sizeClass">
       <h3 class="modal__content__title">{{ title }}</h3>
       <slot></slot>
       <div class="modal__content__button-group">
@@ -30,6 +42,9 @@ defineEmits(['modal-close', 'modal-submit']);
 <style lang="scss">
 .modal {
   position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 10;
   left: 0;
   top: 0;
@@ -40,11 +55,21 @@ defineEmits(['modal-close', 'modal-submit']);
 
   &__content {
     background-color: $white;
-    margin: 15% auto;
     padding: 2 * $defaultMargin;
-    width: 25%;
     border-radius: $defaultRadius;
     box-shadow: $defaultBoxShadow;
+
+    &--small {
+      width: 25%;
+    }
+
+    &--medium {
+      width: 60%;
+    }
+
+    &--large {
+      width: 90%;
+    }
 
     &__title {
       margin-top: 0px;
