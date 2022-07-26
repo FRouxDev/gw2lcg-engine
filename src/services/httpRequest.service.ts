@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const baseUrl = import.meta.env.VITE_APP_API_URL || 'http://localhost:3000/';
+export const baseUrl: string = import.meta.env.VITE_APP_API_URL || 'http://localhost:3000/';
+export const uploadUri = `${baseUrl}cards/upload`;
 
 class HttpRequestService {
   async get(path: string, queryParams = {}, bodyParams = {}): Promise<any> {

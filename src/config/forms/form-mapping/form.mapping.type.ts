@@ -41,6 +41,7 @@ export interface FormMapping {
   traits: InputMapping;
   cardNumber: InputMapping;
   type: InputMapping;
+  cardImage: InputMapping;
   unique?: InputMapping;
   sphere?: InputMapping;
   keywords?: InputMapping;

@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import httpRequestService from '@/services/httpRequest.service';
+import httpRequestService, { baseUrl, uploadUri } from '@/services/httpRequest.service';
 import type { Card } from '@/game/models/card';
-import { onMounted, ref, computed, watch } from 'vue';
+import { onMounted, ref, computed, watch, nextTick } from 'vue';
 import GenericModal from '@/components/GenericModal.vue';
 import type { CardSetOption, FormMapping } from '@/config/forms/form-mapping/form.mapping.type';
 import { cardForm } from '@/config/forms/form-mapping/form.mapping';
 import type { CardSet } from '@/game/models/cardSet';
 import { ModalSize } from '@/config/types/modalSize.type';
 import { FORM_MAP } from '@/config/forms/form-mapping/form.map';
+import type Gw2ImageInputVue from '@/components/forms/Gw2ImageInput.vue';
+import Gw2ImageInput from '../../../components/forms/Gw2ImageInput.vue';
 
 // Component local data
 const cardsData = ref<Array<Card>>([]);
@@ -22,6 +24,10 @@ const pendingDeleteUuid = ref<string | null>(null);
 const isCreateModalVisible = ref(false);
 const cardFormMapper = ref<FormMapping>(cardForm);
 const createdCardObject = ref<Partial<Card>>({});
+
+const fileUpload = ref<InstanceType<typeof Gw2ImageInputVue>>();
+
+const uploadPostUri = ref<string>(uploadUri);
 
 // Component local computed
 const iscreatedCardObjectOk = computed(() => {
@@ -77,8 +83,12 @@ const createCard = () => {
 
 const confirmCreate = async () => {
   try {
-    await httpRequestService.post('cards', createdCardObject.value);
+    const newCard: Card = await httpRequestService.post('cards', createdCardObject.value);
+    uploadPostUri.value = `${uploadUri}/${newCard.uuid}`;
+    await nextTick();
+    fileUpload.value?.submitUpload();
     confirm.value = 'The new Card has been successfully created.';
+    await nextTick();
     loadCardsData();
   } catch (e) {
     if (e instanceof Error) {
@@ -125,6 +135,10 @@ const closeDeleteModal = () => {
   isDeleteModalVisible.value = false;
 };
 
+const imageUrl = (cardImage: string): string => {
+  return `${baseUrl}uploads/img/${cardImage}`;
+};
+
 // Life cycle hooks
 onMounted(() => loadCardsData());
 </script>
@@ -141,22 +155,31 @@ onMounted(() => loadCardsData());
     >
       <div>
         <el-form :model="createdCardObject" label-width="120px">
-          <el-form-item
-            v-for="[key, mapping] of Object.entries(cardFormMapper).slice(0, 5)"
-            :key="key"
-            :label="mapping.label"
-          >
-            <component
-              :is="mapping.component"
-              :options="mapping.options"
-              v-model="createdCardObject[key as keyof Card]"
-            />
-          </el-form-item>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item
+                v-for="[key, mapping] of Object.entries(cardFormMapper).slice(0, 5)"
+                :key="key"
+                :label="mapping.label"
+              >
+                <component
+                  :is="mapping.component"
+                  :options="mapping.options"
+                  v-model="createdCardObject[key as keyof Card]"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item :label="cardFormMapper.cardImage.label">
+                <gw2-image-input ref="fileUpload" :action="uploadPostUri" />
+              </el-form-item>
+            </el-col>
+          </el-row>
           <el-divider />
           <el-row>
             <el-col :span="12">
               <el-form-item
-                v-for="[key, mapping] of Object.entries(cardFormMapper).slice(5, 10)"
+                v-for="[key, mapping] of Object.entries(cardFormMapper).slice(6, 11)"
                 :key="key"
                 :label="mapping.label"
               >
@@ -169,7 +192,7 @@ onMounted(() => loadCardsData());
             </el-col>
             <el-col :span="12">
               <el-form-item
-                v-for="[key, mapping] of Object.entries(cardFormMapper).slice(10)"
+                v-for="[key, mapping] of Object.entries(cardFormMapper).slice(11)"
                 :key="key"
                 :label="mapping.label"
               >
@@ -208,6 +231,13 @@ onMounted(() => loadCardsData());
           <el-alert v-if="error" :title="confirm" type="error" @close="error = null" show-icon />
         </div>
         <el-table v-loading="loading" :data="cardsData" :default-sort="{ prop: 'name', order: 'descending' }" stripe>
+          <el-table-column label="Card image" width="90">
+            <template #default="scope">
+              <div style="display: flex; align-items: center">
+                <el-image :src="imageUrl(scope.row.cardImage)" />
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column prop="name" label="Card name" width="180" sortable />
           <el-table-column prop="set.name" label="Card Set" width="180" sortable />
           <el-table-column prop="type" label="Type" width="120" sortable />
