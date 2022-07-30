@@ -1,4 +1,5 @@
 import Gw2Checkbox from '@/components/forms/Gw2Checkbox.vue';
+import Gw2ImageInput from '@/components/forms/Gw2GenericFileInput.vue';
 import Gw2KeywordsInput from '@/components/forms/Gw2KeywordsInput.vue';
 import Gw2NumberInput from '@/components/forms/Gw2NumberInput.vue';
 import Gw2Select from '@/components/forms/Gw2Select.vue';
@@ -34,6 +35,10 @@ export const cardForm: FormMapping = {
     label: 'Card number',
     minNum: 1,
     maxNum: 255,
+  },
+  cardImage: {
+    component: shallowRef(Gw2ImageInput),
+    label: 'Card picture',
   },
 };
 

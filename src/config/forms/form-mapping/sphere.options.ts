@@ -16,7 +16,7 @@ export const sphereOptions: SphereOption[] = [
   },
   {
     value: Sphere.TACTICS,
-    label: 'Spirit',
+    label: 'Tactics',
   },
   {
     value: Sphere.NEUTRAL,

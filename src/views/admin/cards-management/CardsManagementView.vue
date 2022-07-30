@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import httpRequestService from '@/services/httpRequest.service';
+import httpRequestService, { baseUrl, uploadUri, importUri } from '@/services/httpRequest.service';
 import type { Card } from '@/game/models/card';
-import { onMounted, ref, computed, watch } from 'vue';
+import { onMounted, ref, computed, watch, nextTick } from 'vue';
 import GenericModal from '@/components/GenericModal.vue';
 import type { CardSetOption, FormMapping } from '@/config/forms/form-mapping/form.mapping.type';
 import { cardForm } from '@/config/forms/form-mapping/form.mapping';
 import type { CardSet } from '@/game/models/cardSet';
 import { ModalSize } from '@/config/types/modalSize.type';
 import { FORM_MAP } from '@/config/forms/form-mapping/form.map';
+import Gw2GenericFileInput from '@/components/forms/Gw2GenericFileInput.vue';
+import AlertSection from '../../../components/alerts/AlertSection.vue';
 
 // Component local data
 const cardsData = ref<Array<Card>>([]);
@@ -22,6 +24,13 @@ const pendingDeleteUuid = ref<string | null>(null);
 const isCreateModalVisible = ref(false);
 const cardFormMapper = ref<FormMapping>(cardForm);
 const createdCardObject = ref<Partial<Card>>({});
+
+const fileUpload = ref<InstanceType<typeof Gw2GenericFileInput>>();
+const uploadPostUri = ref<string>(uploadUri);
+
+const fileImport = ref<InstanceType<typeof Gw2GenericFileInput>>();
+const isImportModalVisible = ref(false);
+const importPostUri = ref<string>(importUri);
 
 // Component local computed
 const iscreatedCardObjectOk = computed(() => {
@@ -56,7 +65,7 @@ const loadCardsData = async () => {
     if (typeof e === 'string') {
       error.value = e;
     }
-    loading.value = true;
+    loading.value = false;
   }
 };
 
@@ -65,6 +74,10 @@ const loadSetsData = () => {
     const cardSetOptions: CardSetOption = { value: set.uuid || '', label: set.name };
     return cardSetOptions;
   });
+};
+
+const importJson = () => {
+  isImportModalVisible.value = true;
 };
 
 // Action handlers
@@ -77,8 +90,12 @@ const createCard = () => {
 
 const confirmCreate = async () => {
   try {
-    await httpRequestService.post('cards', createdCardObject.value);
+    const newCard: Card = await httpRequestService.post('cards', createdCardObject.value);
+    uploadPostUri.value = `${uploadUri}/${newCard.uuid}`;
+    await nextTick();
+    fileUpload.value?.submitUpload();
     confirm.value = 'The new Card has been successfully created.';
+    await nextTick();
     loadCardsData();
   } catch (e) {
     if (e instanceof Error) {
@@ -125,12 +142,54 @@ const closeDeleteModal = () => {
   isDeleteModalVisible.value = false;
 };
 
+const confirmImport = async () => {
+  fileImport.value?.submitUpload();
+  confirm.value = 'The new cards have been successfully imported.';
+  await nextTick();
+  loadCardsData();
+  closeImportModal();
+};
+
+const closeImportModal = () => {
+  isImportModalVisible.value = false;
+};
+
+const imageUrl = (cardImage: string): string => {
+  return `${baseUrl}uploads/img/${cardImage}`;
+};
+
+const resetAlerts = () => {
+  error.value = null;
+  confirm.value = null;
+};
+
 // Life cycle hooks
 onMounted(() => loadCardsData());
 </script>
 
 <template>
   <div class="section">
+    <generic-modal
+      title="Import cards from JSON"
+      :display="isImportModalVisible"
+      @modal-close="closeImportModal"
+      @modal-submit="confirmImport"
+      :modal-size="ModalSize.SMALL"
+      accept=".json"
+    >
+      <div>
+        <el-form label-width="120px">
+          <el-form-item label="JSON File">
+            <gw2-generic-file-input
+              ref="fileImport"
+              :action="importPostUri"
+              button-text="Choose a JSON File to upload"
+            />
+          </el-form-item>
+        </el-form>
+      </div>
+    </generic-modal>
+
     <generic-modal
       title="Create a New Card"
       :display="isCreateModalVisible"
@@ -141,22 +200,36 @@ onMounted(() => loadCardsData());
     >
       <div>
         <el-form :model="createdCardObject" label-width="120px">
-          <el-form-item
-            v-for="[key, mapping] of Object.entries(cardFormMapper).slice(0, 5)"
-            :key="key"
-            :label="mapping.label"
-          >
-            <component
-              :is="mapping.component"
-              :options="mapping.options"
-              v-model="createdCardObject[key as keyof Card]"
-            />
-          </el-form-item>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item
+                v-for="[key, mapping] of Object.entries(cardFormMapper).slice(0, 5)"
+                :key="key"
+                :label="mapping.label"
+              >
+                <component
+                  :is="mapping.component"
+                  :options="mapping.options"
+                  v-model="createdCardObject[key as keyof Card]"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item :label="cardFormMapper.cardImage.label">
+                <gw2-generic-file-input
+                  ref="fileUpload"
+                  :action="uploadPostUri"
+                  button-text="Choose a picture to upload"
+                  is-picture
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
           <el-divider />
           <el-row>
             <el-col :span="12">
               <el-form-item
-                v-for="[key, mapping] of Object.entries(cardFormMapper).slice(5, 10)"
+                v-for="[key, mapping] of Object.entries(cardFormMapper).slice(6, 11)"
                 :key="key"
                 :label="mapping.label"
               >
@@ -169,7 +242,7 @@ onMounted(() => loadCardsData());
             </el-col>
             <el-col :span="12">
               <el-form-item
-                v-for="[key, mapping] of Object.entries(cardFormMapper).slice(10)"
+                v-for="[key, mapping] of Object.entries(cardFormMapper).slice(11)"
                 :key="key"
                 :label="mapping.label"
               >
@@ -199,15 +272,24 @@ onMounted(() => loadCardsData());
       <el-col :span="24" class="section__wrapper">
         <div class="section__wrapper__top">
           <h1 class="section__wrapper__top__title">Cards Management</h1>
-          <el-button type="primary" class="section__wrapper__top__button" @click="createCard">
-            Create New Card
-          </el-button>
+          <div>
+            <el-button type="primary" class="section__wrapper__top__button" @click="importJson" icon="Upload">
+              Import Cards by JSON
+            </el-button>
+            <el-button type="success" class="section__wrapper__top__button" @click="createCard" icon="Plus">
+              Create New Card
+            </el-button>
+          </div>
         </div>
-        <div>
-          <el-alert v-if="confirm" :title="confirm" type="success" @close="confirm = null" show-icon />
-          <el-alert v-if="error" :title="confirm" type="error" @close="error = null" show-icon />
-        </div>
+        <alert-section @close="resetAlerts" />
         <el-table v-loading="loading" :data="cardsData" :default-sort="{ prop: 'name', order: 'descending' }" stripe>
+          <el-table-column label="Card image" width="90">
+            <template #default="scope">
+              <div style="display: flex; align-items: center">
+                <el-image :src="imageUrl(scope.row.cardImage)" />
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column prop="name" label="Card name" width="180" sortable />
           <el-table-column prop="set.name" label="Card Set" width="180" sortable />
           <el-table-column prop="type" label="Type" width="120" sortable />
