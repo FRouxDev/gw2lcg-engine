@@ -3,8 +3,7 @@ import { useRouter } from 'vue-router';
 import MenuItem from '@/components/menu/MenuItem.vue';
 import GenericModal from '@/components/GenericModal.vue';
 import { ref } from 'vue';
-import { decks as availableDecks } from '@/game/data/decks';
-import type { DeckList } from '@/game/models/deckList';
+import type { Card } from '@/game/models/card';
 
 const router = useRouter();
 
@@ -24,7 +23,7 @@ const closeModal = () => {
 
 // Component Data
 const displayModal = ref(false);
-const decks = ref<DeckList[]>(availableDecks);
+const decks = ref<Card[]>([]);
 const chosenDeck = ref();
 </script>
 
@@ -40,7 +39,7 @@ const chosenDeck = ref();
       <div>
         <p>Selected deck : {{ chosenDeck }}</p>
         <el-select class="m-2" placeholder="Choisissez un deck..." size="large" v-model="chosenDeck">
-          <el-option v-for="deck of decks" :key="deck.deckId" :label="deck.deckName" :value="deck.deckId" />
+          <el-option v-for="deck of decks" :key="deck.uuid" :label="deck.name" :value="deck.uuid" />
         </el-select>
       </div>
     </generic-modal>
