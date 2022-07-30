@@ -12,6 +12,18 @@ defineProps({
     type: String,
     default: '',
   },
+  isPicture: {
+    type: Boolean,
+    default: false,
+  },
+  buttonText: {
+    type: String,
+    default: 'Pick a file',
+  },
+  accept: {
+    type: String,
+    default: '',
+  },
 });
 
 const upload = ref<UploadInstance>();
@@ -39,10 +51,11 @@ defineExpose({ submitUpload });
       :limit="1"
       :on-exceed="handleExceed"
       :auto-upload="false"
-      list-type="picture"
+      :list-type="isPicture ? 'picture' : 'text'"
+      :accept="accept || undefined"
     >
       <template #trigger>
-        <el-button type="primary"> Add a picture </el-button>
+        <el-button type="primary"> {{ buttonText }} </el-button>
       </template>
       <template #tip>
         <div class="el-upload__tip text-red">Limit 1 file, new file will cover the old file</div>
