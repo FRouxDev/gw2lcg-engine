@@ -36,10 +36,6 @@ export const cardForm: FormMapping = {
     minNum: 1,
     maxNum: 255,
   },
-  cardImage: {
-    component: shallowRef(Gw2ImageInput),
-    label: 'Card picture',
-  },
 };
 
 export const heroForm: FormMapping = {
@@ -331,9 +327,13 @@ export const treacheryForm: FormMapping = {
 
 export const questForm: FormMapping = {
   ...cardForm,
+  sideText: {
+    component: shallowRef(Gw2Textarea),
+    label: 'Face A text',
+  },
   text: {
     component: shallowRef(Gw2Textarea),
-    label: 'Card text',
+    label: 'Face B text',
   },
   questPoints: {
     component: shallowRef(Gw2NumberInput),

@@ -1,87 +1,90 @@
 import type { CardSet } from './cardSet';
 import type { Sphere } from './types/sphere.type';
 export interface Card {
-  uuid?: string; // Auto-généré
-  name: string; // Input field
-  set: CardSet; // Select
-  traits: string[]; // Nuage de mots
-  cardNumber?: number; // Input field small
-  type: string; // Select
+  uuid?: string;
+  name: string;
+  set: CardSet;
+  traits: string[];
+  cardNumber?: number;
+  cardImage?: string;
+  type: string;
 }
 
 export interface Hero extends Card {
-  unique: boolean; // Checkbox
-  sphere: Sphere; // Select
-  keywords: string[]; // Nuage de mots
-  threat: number; // Select number
-  text?: string; // Textarea
-  willpower: number; // Select number
-  attack: number; // Select number
-  defense: number; // Select number
-  health: number; // Select number
+  unique: boolean;
+  sphere: Sphere;
+  keywords: string[];
+  threat: number;
+  text?: string;
+  willpower: number;
+  attack: number;
+  defense: number;
+  health: number;
 }
 
 export interface Ally extends Card {
-  unique: boolean; // Checkbox
-  sphere: Sphere; // Select
-  keywords: string[]; // Nuage de mots
-  cost: number; // Select number
-  text: string; // Textarea
-  willpower: number; // Select number
-  attack: number; // Select number
-  defense: number; // Select number
-  health: number; // Select number
+  unique: boolean;
+  sphere: Sphere;
+  keywords: string[];
+  cost: number;
+  text: string;
+  willpower: number;
+  attack: number;
+  defense: number;
+  health: number;
 }
 
 export interface Event extends Card {
-  sphere: Sphere; // Select
-  keywords: string[]; // Nuage de mots
-  cost: number; // Select number
-  text: string; // Textarea
+  sphere: Sphere;
+  keywords: string[];
+  cost: number;
+  text: string;
 }
 
 export interface Attachment extends Card {
-  unique: boolean; // Checkbox
-  sphere: Sphere; // Select
-  keywords: string[]; // Nuage de mots
-  cost: number; // Select number
-  text: string; // Textarea
+  unique: boolean;
+  sphere: Sphere;
+  keywords: string[];
+  cost: number;
+  text: string;
 }
 
 export interface Enemy extends Card {
-  unique: boolean; // Checkbox
-  keywords: string[]; // Nuage de mots
-  engagement: number; // Select number
-  text: string; // Textarea
-  shadow: string; // Textarea
-  threat: number; // Select number
-  attack: number; // Select number
-  defense: number; // Select number
-  health: number; // Select number
-  victoryPoints?: number; // Select number
-  quantity: number; // Select number
+  unique: boolean;
+  keywords: string[];
+  engagement: number;
+  text: string;
+  shadow: string;
+  threat: number;
+  attack: number;
+  defense: number;
+  health: number;
+  victoryPoints?: number;
+  quantity: number;
 }
 
 export interface Location extends Card {
-  unique: boolean; // Checkbox
-  keywords: string[]; // Nuage de mots
-  questPoints: number; // Select number
-  text: string; // Textarea
-  shadow: string; // Textarea
-  threat: number; // Select number
-  victoryPoints?: number; // Select number
-  quantity: number; // Select number
+  unique: boolean;
+  keywords: string[];
+  questPoints: number;
+  text: string;
+  shadow: string;
+  threat: number;
+  victoryPoints?: number;
+  quantity: number;
 }
 
 export interface Treachery extends Card {
-  keywords: string[]; // Nuage de mots
-  text: string; // Textarea
-  shadow: string; // Textarea
-  quantity: number; // Select number
+  keywords: string[];
+  text: string;
+  shadow: string;
+  quantity: number;
 }
 
 export interface Quest extends Card {
-  text: string; // Textarea
-  questPoints: number; // Select number
-  victoryPoints?: number; // Select number
+  text: string;
+  sideText: string;
+  sideCardImage?: string;
+  questPoints: number;
+  victoryPoints?: number;
 }

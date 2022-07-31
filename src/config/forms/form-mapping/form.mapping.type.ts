@@ -41,12 +41,12 @@ export interface FormMapping {
   traits: InputMapping;
   cardNumber: InputMapping;
   type: InputMapping;
-  cardImage: InputMapping;
   unique?: InputMapping;
   sphere?: InputMapping;
   keywords?: InputMapping;
   threat?: InputMapping;
   text?: InputMapping;
+  sideText?: InputMapping;
   willpower?: InputMapping;
   attack?: InputMapping;
   defense?: InputMapping;

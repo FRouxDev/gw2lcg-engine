@@ -37,6 +37,10 @@ const iscreatedCardObjectOk = computed(() => {
   return !!(createdCardObject.value.name && createdCardObject.value.type);
 });
 
+const isCreatingQuestCard = computed(() => {
+  return createdCardObject.value.type === 'Quest';
+});
+
 // Component watchers
 watch(
   () => createdCardObject.value.type,
@@ -215,7 +219,7 @@ onMounted(() => loadCardsData());
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item :label="cardFormMapper.cardImage.label">
+              <el-form-item :label="isCreatingQuestCard ? 'B side image' : 'Card Image'">
                 <gw2-generic-file-input
                   ref="fileUpload"
                   :action="uploadPostUri"
@@ -229,7 +233,7 @@ onMounted(() => loadCardsData());
           <el-row>
             <el-col :span="12">
               <el-form-item
-                v-for="[key, mapping] of Object.entries(cardFormMapper).slice(6, 11)"
+                v-for="[key, mapping] of Object.entries(cardFormMapper).slice(5, 10)"
                 :key="key"
                 :label="mapping.label"
               >
@@ -242,7 +246,7 @@ onMounted(() => loadCardsData());
             </el-col>
             <el-col :span="12">
               <el-form-item
-                v-for="[key, mapping] of Object.entries(cardFormMapper).slice(11)"
+                v-for="[key, mapping] of Object.entries(cardFormMapper).slice(10)"
                 :key="key"
                 :label="mapping.label"
               >
@@ -282,15 +286,16 @@ onMounted(() => loadCardsData());
           </div>
         </div>
         <alert-section @close="resetAlerts" />
+        <div class="section__wrapper__index">Total: {{ cardsData.length || '0' }} cards</div>
         <el-table v-loading="loading" :data="cardsData" :default-sort="{ prop: 'name', order: 'descending' }" stripe>
-          <el-table-column label="Card image" width="90">
+          <el-table-column label="Card image" width="100">
             <template #default="scope">
               <div style="display: flex; align-items: center">
                 <el-image :src="imageUrl(scope.row.cardImage)" />
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="name" label="Card name" width="180" sortable />
+          <el-table-column prop="name" label="Card name" sortable />
           <el-table-column prop="set.name" label="Card Set" width="180" sortable />
           <el-table-column prop="type" label="Type" width="120" sortable />
           <el-table-column prop="sphere" label="Sphere" width="140" sortable />
@@ -320,6 +325,10 @@ onMounted(() => loadCardsData());
       }
       display: flex;
       justify-content: space-between;
+    }
+
+    &__index {
+      font-size: $defaultSize;
     }
 
     margin-top: $defaultMargin * 3 !important;
