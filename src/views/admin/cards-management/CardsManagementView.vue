@@ -10,6 +10,7 @@ import { ModalSize } from '@/config/types/modalSize.type';
 import { FORM_MAP } from '@/config/forms/form-mapping/form.map';
 import Gw2GenericFileInput from '@/components/forms/Gw2GenericFileInput.vue';
 import AlertSection from '../../../components/alerts/AlertSection.vue';
+import router from '@/router';
 
 // Component local data
 const cardsData = ref<Array<Card>>([]);
@@ -159,12 +160,20 @@ const closeImportModal = () => {
 };
 
 const imageUrl = (cardImage: string): string => {
-  return `${baseUrl}uploads/img/${cardImage}`;
+  return `${baseUrl}${cardImage}`;
+};
+
+const cardTooltipHtml = (cardImage: string): string => {
+  return `<img width="360" src="${imageUrl(cardImage)}" />`;
 };
 
 const resetAlerts = () => {
   error.value = null;
   confirm.value = null;
+};
+
+const backToMenu = () => {
+  router.push('/admin');
 };
 
 // Life cycle hooks
@@ -273,6 +282,11 @@ onMounted(() => loadCardsData());
     </generic-modal>
 
     <el-row>
+      <el-col :span="24" class="section__navigation">
+        <el-button link type="primary" size="small" @click="backToMenu">Back to Menu</el-button>
+      </el-col>
+    </el-row>
+    <el-row>
       <el-col :span="24" class="section__wrapper">
         <div class="section__wrapper__top">
           <h1 class="section__wrapper__top__title">Cards Management</h1>
@@ -287,12 +301,20 @@ onMounted(() => loadCardsData());
         </div>
         <alert-section @close="resetAlerts" />
         <div class="section__wrapper__index">Total: {{ cardsData.length || '0' }} cards</div>
-        <el-table v-loading="loading" :data="cardsData" :default-sort="{ prop: 'name', order: 'descending' }" stripe>
+        <el-table v-loading="loading" :data="cardsData" :default-sort="{ prop: 'name', order: 'ascending' }" stripe>
           <el-table-column label="Card image" width="100">
             <template #default="scope">
-              <div style="display: flex; align-items: center">
-                <el-image :src="imageUrl(scope.row.cardImage)" />
-              </div>
+              <el-tooltip
+                effect="light"
+                :show-after="250"
+                :content="cardTooltipHtml(scope.row.cardImage)"
+                class="section__wrapper__table__tooltip"
+                raw-content
+              >
+                <div style="display: flex; align-items: center" class="section__wrapper__table__img">
+                  <el-image :src="imageUrl(scope.row.cardImage)" />
+                </div>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column prop="name" label="Card name" sortable />
@@ -312,16 +334,21 @@ onMounted(() => loadCardsData());
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .section {
   width: 80%;
   margin: auto;
+
+  &__navigation {
+    margin-top: $defaultMargin;
+    margin-bottom: $defaultMargin;
+  }
 
   &__wrapper {
     &__top {
       &__title,
       &__button {
-        margin-top: $defaultMargin !important;
+        margin-top: 0 !important;
       }
       display: flex;
       justify-content: space-between;
@@ -331,7 +358,16 @@ onMounted(() => loadCardsData());
       font-size: $defaultSize;
     }
 
-    margin-top: $defaultMargin * 3 !important;
+    &__table {
+      &__tooltip {
+        border-radius: $defaultRadius !important;
+        box-shadow: $defaultBoxShadow !important;
+      }
+      &__img {
+        cursor: pointer !important;
+      }
+    }
+
     padding: 2 * $defaultMargin;
     border-radius: $defaultRadius;
     background-color: $white;

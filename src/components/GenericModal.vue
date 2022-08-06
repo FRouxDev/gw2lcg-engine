@@ -39,7 +39,7 @@ defineEmits(['modal-close', 'modal-submit']);
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .modal {
   position: fixed;
   display: flex;

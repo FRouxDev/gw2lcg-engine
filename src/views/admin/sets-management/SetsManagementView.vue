@@ -180,7 +180,7 @@ onMounted(() => loadSetsData());
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .section {
   width: 80%;
   margin: auto;

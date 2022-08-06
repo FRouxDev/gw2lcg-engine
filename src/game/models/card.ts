@@ -1,4 +1,5 @@
 import type { CardSet } from './cardSet';
+import type { CardType } from './types/cardType.type';
 import type { Sphere } from './types/sphere.type';
 export interface Card {
   uuid?: string;
@@ -7,7 +8,7 @@ export interface Card {
   traits: string[];
   cardNumber?: number;
   cardImage?: string;
-  type: string;
+  type: CardType;
 }
 
 export interface Hero extends Card {
@@ -88,3 +89,15 @@ export interface Quest extends Card {
   questPoints: number;
   victoryPoints?: number;
 }
+
+export interface CardWithUuid {
+  uuid: string;
+  name: string;
+  set: CardSet;
+  traits: string[];
+  cardNumber?: number;
+  cardImage?: string;
+  type: CardType;
+}
+
+export type PlayerCard = (Hero | Ally | Attachment | Event) & CardWithUuid;

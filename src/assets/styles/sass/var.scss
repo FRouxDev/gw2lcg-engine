@@ -1,5 +1,13 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto|Open+Sans:400italic,700italic,400,700);
+
+@font-face {
+  font-family: 'Gw2-Icons';
+  font-style: normal;
+  src: local('Nelsie'), url(@/assets/fonts/Nelsie-Icone-GW2.otf) format('opentype');
+}
+
 $coreFont: 'Roboto', serif;
+$iconsFont: 'Gw2-Icons';
 
 $darkTeal: #1e9995;
 $lightTeal: #19d3bf;
@@ -7,6 +15,11 @@ $black: #000000;
 $darkGrey: #333333;
 $lightGrey: #cccccc;
 $white: #ffffff;
+
+$tacticsColor: #c83c3e;
+$leadershipColor: #dfa046;
+$loreColor: #39ab4d;
+$spiritColor: #009ec3;
 
 $defaultSize: 12px;
 $mediumSize: 18px;
@@ -17,9 +30,12 @@ $smMargin: 4px;
 $defaultMargin: 8px;
 $xlMargin: 24px;
 $defaultRadius: 12px;
+$smRadius: 4px;
 
 $defaultBoxShadow: $smMargin $smMargin 4px $darkGrey;
 $textShadowDark: $xsMargin $xsMargin 1px $darkGrey;
 $textShadowLight: $xsMargin $xsMargin 1px $lightGrey;
+
+$defaultTransform: -8px;
 
 $modalOpacity: 0.6;
