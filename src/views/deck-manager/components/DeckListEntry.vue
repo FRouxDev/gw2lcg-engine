@@ -39,6 +39,7 @@ const cardImage = computed<string>(() => {
   display: flex;
   width: 100%;
   gap: 0.5rem;
+  cursor: pointer;
   height: 5 * $defaultMargin;
   align-items: center;
   justify-content: space-between;

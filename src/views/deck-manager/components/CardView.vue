@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import type { PlayerCard } from '@/game/models/card';
 import { baseUrl } from '@/services/httpRequest.service';
-import type { PropType } from 'vue';
+import { computed, type PropType } from 'vue';
 
 const props = defineProps({
   card: {
     type: Object as PropType<PlayerCard>,
     required: true,
+  },
+  canAdd: {
+    type: Boolean,
+    default: true,
   },
 });
 
@@ -15,13 +19,26 @@ const imageUrl = (cardImage: string | undefined): string => {
 };
 
 const dragStart = (e: DragEvent) => {
-  e.dataTransfer?.setData('card', props.card.uuid);
+  if (props.canAdd) {
+    e.dataTransfer?.setData('card', props.card.uuid);
+  } else {
+    e.preventDefault();
+  }
 };
+
+const additionnalClass = computed(() => {
+  return { 'image__wrapper__picture--overlay': !props.canAdd };
+});
 </script>
 
 <template>
   <div class="image__wrapper" draggable="true" @dragstart="dragStart">
-    <el-image class="image__wrapper__picture" :src="imageUrl(card?.cardImage)" loading="lazy"></el-image>
+    <el-image
+      class="image__wrapper__picture"
+      :class="additionnalClass"
+      :src="imageUrl(card?.cardImage)"
+      loading="lazy"
+    ></el-image>
   </div>
 </template>
 
@@ -43,6 +60,10 @@ const dragStart = (e: DragEvent) => {
 
     &__picture {
       border-radius: $defaultRadius;
+      &--overlay {
+        filter: grayscale(75%);
+        cursor: not-allowed;
+      }
     }
   }
 }

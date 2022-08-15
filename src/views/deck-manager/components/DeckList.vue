@@ -1,14 +1,9 @@
 <script setup lang="ts">
-import type { DeckEntry } from '@/game/models/types/decks/deckEntry.type';
-import type { PropType } from 'vue';
+import { useDeckManagerStore } from '@/stores/deckManager';
 import DeckListEntry from './DeckListEntry.vue';
+import { storeToRefs } from 'pinia';
 
-defineProps({
-  deckList: {
-    type: Array as PropType<DeckEntry[]>,
-    default: () => [],
-  },
-});
+const { sortedDeckList } = storeToRefs(useDeckManagerStore());
 
 const handleOver = (e: DragEvent) => {
   e.preventDefault();
@@ -20,7 +15,7 @@ const handleDrop = (e: DragEvent) => {
   emit('addCards', cardUuid);
 };
 
-const emit = defineEmits(['addCards']);
+const emit = defineEmits(['addCards', 'removeCard']);
 </script>
 
 <template>
@@ -28,7 +23,12 @@ const emit = defineEmits(['addCards']);
     <div>
       <p>Drag here<br /></p>
     </div>
-    <DeckListEntry v-for="entry in deckList" :deck-entry="entry" :key="entry.card.uuid" />
+    <DeckListEntry
+      v-for="entry in sortedDeckList"
+      :deck-entry="entry"
+      :key="entry.card.uuid"
+      @dblclick="emit('removeCard', entry)"
+    />
   </div>
 </template>
 

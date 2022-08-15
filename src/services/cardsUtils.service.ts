@@ -30,7 +30,7 @@ class CardsService {
         ? -1
         : 1;
     }
-    return card1.name > card2.name ? -1 : 1;
+    return card1.name > card2.name ? 1 : -1;
   }
 }
 

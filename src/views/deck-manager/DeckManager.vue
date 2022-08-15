@@ -1,57 +1,13 @@
 <script setup lang="ts">
 import router from '@/router';
-import { onMounted, ref } from 'vue';
-import type { PlayerCard } from '@/game/models/card';
-import type { CardSet } from '@/game/models/cardSet';
+import { onMounted } from 'vue';
 import BrowserGrid from './components/BrowserGrid.vue';
-import httpRequestService from '@/services/httpRequest.service';
 import DeckList from './components/DeckList.vue';
-import type { DeckEntry } from '@/game/models/types/decks/deckEntry.type';
+import { useDeckManagerStore } from '@/stores/deckManager';
 
 const backToMenu = () => router.push('/');
 
-const cardsData = ref<PlayerCard[]>([]);
-const cardSets = ref<CardSet[]>([]);
-const loading = ref(true);
-const error = ref<string | null>(null);
-
-const deckList = ref<DeckEntry[]>([]);
-
-// Decklist
-const addCard = (uuid: string) => {
-  const playerCard = cardsData.value.find((card) => card.uuid === uuid);
-
-  if (playerCard) {
-    const deckHasCard = deckList.value.find((entry: DeckEntry) => entry.card.uuid === playerCard.uuid);
-    if (deckHasCard) {
-      deckHasCard.quantity += 1;
-    } else {
-      deckList.value.push({
-        deck: 'Current deck',
-        card: playerCard,
-        quantity: 1,
-      });
-    }
-  }
-};
-
-const loadCardsData = async () => {
-  try {
-    const { cards } = await httpRequestService.get('cards/player');
-    const { sets } = await httpRequestService.get('sets');
-    loading.value = false;
-    cardsData.value = cards;
-    cardSets.value = sets;
-  } catch (e) {
-    if (e instanceof Error) {
-      error.value = e.message as string;
-    }
-    if (typeof e === 'string') {
-      error.value = e;
-    }
-    loading.value = false;
-  }
-};
+const { addCardToDeck, loadCardsData, removeCardFromDeck } = useDeckManagerStore();
 
 onMounted(() => {
   loadCardsData();
@@ -71,16 +27,13 @@ onMounted(() => {
           <el-header class="section__decklist__top">
             <h1 class="section__decklist__top__title">Decklist</h1>
           </el-header>
-          <DeckList @add-cards="addCard" :deck-list="deckList" />
+          <DeckList @add-cards="addCardToDeck" @remove-card="removeCardFromDeck" />
         </el-container>
       </el-col>
       <el-col :span="18">
         <el-container class="section__browser">
-          <el-header class="section__browser__top">
-            <h1 class="section__browser__top__title">Browser</h1>
-          </el-header>
           <div class="section__browsers_cards-wrapper">
-            <browser-grid :cards-list="cardsData" @add-cards="addCard" />
+            <browser-grid @add-cards="addCardToDeck" />
           </div>
         </el-container>
       </el-col>

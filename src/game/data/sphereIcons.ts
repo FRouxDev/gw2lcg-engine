@@ -3,7 +3,7 @@ import { Sphere } from '../models/types/sphere.type';
 export const ICONS_PATH = './game-icons/';
 
 export const SPHERE_ICONS = {
-  [Sphere.LEADERSHIP]: 'B',
+  [Sphere.LEADERSHIP]: 'leadership-icon-128px.png',
   [Sphere.LORE]: 'lore-icon-128px.png',
   [Sphere.SPIRIT]: 'spirit-icon-128px.png',
   [Sphere.TACTICS]: 'tactics-icon-128px.png',
