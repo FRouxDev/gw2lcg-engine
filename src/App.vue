@@ -5,12 +5,6 @@ import { RouterView } from 'vue-router';
 <template>
   <div>
     <el-container class="app">
-      <!--<el-header v-if="!HEADLESS_ROUTES.includes(route.name as string)">
-        <el-menu mode="horizontal" router>
-          <el-menu-item index="/">Home</el-menu-item>
-          <el-menu-item index="/new-game">New Game</el-menu-item>
-        </el-menu>
-      </el-header>-->
       <el-main class="app__main">
         <RouterView />
       </el-main>

@@ -7,7 +7,7 @@ const router = useRouter();
 // Component Methods
 const manageSets = () => router.push('/admin/sets-management');
 const manageCards = () => router.push('/admin/cards-management');
-const importCards = () => router.push('/new-game');
+const testSocket = () => router.push('/admin/sockets');
 const back = () => router.push('/');
 </script>
 
@@ -17,7 +17,7 @@ const back = () => router.push('/');
     <el-divider class="menu__divider" />
     <menu-item @menu-click="manageCards" label="Manage cards" />
     <el-divider class="menu__divider" />
-    <menu-item @menu-click="importCards" label="Import cards" />
+    <menu-item @menu-click="testSocket" label="Test websockets" />
     <el-divider class="menu__divider" />
     <menu-item @menu-click="back" label="Back to Main menu" last />
   </div>

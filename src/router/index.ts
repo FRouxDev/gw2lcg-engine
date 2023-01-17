@@ -10,6 +10,11 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      path: '/game-lobby',
+      name: 'game-lobby',
+      component: () => import('@/views/lobby/LobbyView.vue'),
+    },
+    {
       path: '/new-game',
       name: 'new-game',
       component: () => import('@/views/new-game/NewGame.vue'),
@@ -38,6 +43,11 @@ const router = createRouter({
       path: '/admin/cards-management',
       name: 'cards-management',
       component: () => import('@/views/admin/cards-management/CardsManagementView.vue'),
+    },
+    {
+      path: '/admin/sockets',
+      name: 'sockets',
+      component: () => import('@/views/admin/sockets/SocketsView.vue'),
     },
   ],
 });

@@ -2,37 +2,55 @@
 import { useRouter } from 'vue-router';
 import MenuItem from '@/components/menu/MenuItem.vue';
 import GenericModal from '@/components/GenericModal.vue';
+import { useUserStore } from '@/stores/users';
 import { ref } from 'vue';
 import type { Card } from '@/game/models/card';
 
 const router = useRouter();
 
+const usersStore = useUserStore();
+
 // Component Methods
 const startNewGame = () => router.push('/new-game');
 const loadSavedGame = () => {
-  displayModal.value = true;
+  displayDeckModal.value = true;
 };
 const goToAdmin = () => router.push('/admin');
 const openDeckManager = () => router.push('/deck-manager');
+const openLobby = () => {
+  displayUserInputModal.value = true;
+};
 const openSettings = () => console.log('Settings');
 const quitGame = () => window.close();
-const closeModal = () => {
-  displayModal.value = false;
+
+const closeDeckModal = () => {
+  displayDeckModal.value = false;
   chosenDeck.value = undefined;
+};
+const closeUserInputModal = () => {
+  displayUserInputModal.value = false;
+  userName.value = '';
+};
+
+const joinLobbyAsUser = () => {
+  usersStore.setPlayer(userName.value);
+  router.push('/game-lobby');
 };
 
 // Component Data
-const displayModal = ref(false);
+const displayDeckModal = ref(false);
+const displayUserInputModal = ref(false);
 const decks = ref<Card[]>([]);
 const chosenDeck = ref();
+const userName = ref('');
 </script>
 
 <template>
   <div class="menu">
     <generic-modal
       title="Choisissez votre deck."
-      :display="displayModal"
-      @modal-close="closeModal"
+      :display="displayDeckModal"
+      @modal-close="closeDeckModal"
       confirm="Démarrer"
       :confirm-enabled="!!chosenDeck"
     >
@@ -43,7 +61,22 @@ const chosenDeck = ref();
         </el-select>
       </div>
     </generic-modal>
+    <generic-modal
+      title="Please type your username"
+      :display="displayUserInputModal"
+      @modal-close="closeUserInputModal"
+      @modal-submit="joinLobbyAsUser"
+      confirm="Confirm"
+      :confirm-enabled="!!userName"
+    >
+      <div>
+        <el-input v-model="userName" placeholder="Your username" label="Username" />
+        <br />
+      </div>
+    </generic-modal>
     <menu-item @menu-click="startNewGame" label="Start New Game" first />
+    <el-divider class="menu__divider" />
+    <menu-item @menu-click="openLobby" label="Join the Lobby" />
     <el-divider class="menu__divider" />
     <menu-item @menu-click="loadSavedGame" label="Load Saved Game" />
     <el-divider class="menu__divider" />
