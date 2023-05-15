@@ -13,13 +13,13 @@ const back = () => router.push('/');
 
 <template>
   <div class="menu">
-    <menu-item @menu-click="manageSets" label="Manage sets" first />
+    <menu-item @menu-click="manageSets" :label="$t('adminMenu.manageSets')" first />
     <el-divider class="menu__divider" />
-    <menu-item @menu-click="manageCards" label="Manage cards" />
+    <menu-item @menu-click="manageCards" :label="$t('adminMenu.manageCards')" />
     <el-divider class="menu__divider" />
-    <menu-item @menu-click="testSocket" label="Test websockets" />
+    <menu-item @menu-click="testSocket" :label="$t('adminMenu.websockets')" />
     <el-divider class="menu__divider" />
-    <menu-item @menu-click="back" label="Back to Main menu" last />
+    <menu-item @menu-click="back" :label="$t('adminMenu.back')" last />
   </div>
 </template>
 

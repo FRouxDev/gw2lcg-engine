@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed, type PropType } from 'vue';
 import { ModalSize } from '@/config/types/modalSize.type';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
   title: String,
   display: Boolean,
-  cancel: { type: String, default: 'Cancel' },
-  confirm: { type: String, default: 'Confirm' },
+  cancel: { type: String, default: () => useI18n().t('generic.modal.buttons.cancel') },
+  confirm: { type: String, default: () => useI18n().t('generic.modal.buttons.confirm') },
   confirmEnabled: { type: Boolean, default: true },
   modalSize: { type: String as PropType<ModalSize>, default: ModalSize.SMALL },
 });

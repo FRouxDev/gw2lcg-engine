@@ -74,19 +74,19 @@ const userName = ref('');
         <br />
       </div>
     </generic-modal>
-    <menu-item @menu-click="startNewGame" label="Start New Game" first />
+    <menu-item @menu-click="startNewGame" :label="$t('menu.newGame')" first />
     <el-divider class="menu__divider" />
-    <menu-item @menu-click="openLobby" label="Join the Lobby" />
+    <menu-item @menu-click="openLobby" :label="$t('menu.joinLobby')" />
     <el-divider class="menu__divider" />
-    <menu-item @menu-click="loadSavedGame" label="Load Saved Game" />
+    <menu-item @menu-click="loadSavedGame" :label="$t('menu.loadSaved')" />
     <el-divider class="menu__divider" />
-    <menu-item @menu-click="goToAdmin" label="Administration Board" />
+    <menu-item @menu-click="goToAdmin" :label="$t('menu.navAdmin')" />
     <el-divider class="menu__divider" />
-    <menu-item @menu-click="openDeckManager" label="Open Deck Manager" />
+    <menu-item @menu-click="openDeckManager" :label="$t('menu.deckManager')" />
     <el-divider class="menu__divider" />
-    <menu-item @menu-click="openSettings" label="Settings" />
+    <menu-item @menu-click="openSettings" :label="$t('menu.settings')" />
     <el-divider class="menu__divider" />
-    <menu-item @menu-click="quitGame" label="Quit" last />
+    <menu-item @menu-click="quitGame" :label="$t('menu.quit')" last />
   </div>
 </template>
 

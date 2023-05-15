@@ -4,6 +4,11 @@ import stringsUtilsService from '@/services/stringsUtils.service';
 import type { CardSet } from '@/game/models/cardSet';
 import { onMounted, ref, computed } from 'vue';
 import GenericModal from '@/components/GenericModal.vue';
+import { useI18n } from 'vue-i18n';
+import { ModalSize } from '@/config/types/modalSize.type';
+import router from '@/router';
+
+const { t } = useI18n();
 
 // Component local data
 const setsData = ref<Array<CardSet>>([]);
@@ -61,7 +66,7 @@ const createSet = () => {
 const confirmCreate = async () => {
   try {
     await httpRequestService.post('sets', createdSetObject.value);
-    confirm.value = 'The new Card Set has been successfully created.';
+    confirm.value = t('admin.sets.messages.notifyCreated');
     loadSetsData();
   } catch (e) {
     if (e instanceof Error) {
@@ -89,7 +94,7 @@ const deleteSet = (uuid: string) => {
 const confirmDelete = async () => {
   try {
     await httpRequestService.delete(`sets/${pendingDeleteUuid.value}`);
-    confirm.value = 'The Card Set has been successfully deleted.';
+    confirm.value = t('admin.sets.messages.notifyDeleted');
     loadSetsData();
   } catch (e) {
     if (e instanceof Error) {
@@ -108,6 +113,10 @@ const closeDeleteModal = () => {
   isDeleteModalVisible.value = false;
 };
 
+const backToMenu = () => {
+  router.push('/admin');
+};
+
 // Life cycle hooks
 onMounted(() => loadSetsData());
 </script>
@@ -115,19 +124,20 @@ onMounted(() => loadSetsData());
 <template>
   <div class="section">
     <generic-modal
-      title="Card Set Creation"
+      :title="$t('admin.sets.modal.create.title')"
       :display="isCreateModalVisible"
       @modal-close="closeCreateModal"
       @modal-submit="confirmCreate"
       :confirm-enabled="isCreatedSetObjectOk"
+      :modal-size="ModalSize.SMALL"
     >
       <div>
         <el-form :model="createdSetObject" label-width="120px">
-          <el-form-item label="Set name">
-            <el-input v-model="createdSetObject.name" placeholder="Set name" />
+          <el-form-item :label="$t('admin.sets.modal.create.setName')">
+            <el-input v-model="createdSetObject.name" :placeholder="$t('admin.sets.modal.create.setName')" />
           </el-form-item>
-          <el-form-item label="Set type">
-            <el-select class="m-2" placeholder="Set type" v-model="createdSetObject.type">
+          <el-form-item :label="$t('admin.sets.modal.create.setType')">
+            <el-select class="m-2" :laceholder="$t('admin.sets.modal.create.setType')" v-model="createdSetObject.type">
               <el-option label="Player Set" value="player" />
               <el-option label="Encounter Set" value="encounter" />
               <el-option label="Special Set" value="special" />
@@ -138,20 +148,25 @@ onMounted(() => loadSetsData());
     </generic-modal>
 
     <generic-modal
-      title="Card Set Deletion"
+      :title="$t('admin.sets.modal.delete.title')"
       :display="isDeleteModalVisible"
       @modal-close="closeDeleteModal"
       @modal-submit="confirmDelete"
     >
-      Are you sure you want to delete this Card Set?
+      {{ $t('admin.sets.modal.delete.text') }}
     </generic-modal>
 
     <el-row>
+      <el-col :span="24" class="section__navigation">
+        <el-button link type="primary" size="small" @click="backToMenu">{{ $t('admin.sets.back') }}</el-button>
+      </el-col>
+    </el-row>
+    <el-row>
       <el-col :span="24" class="section__wrapper">
         <div class="section__wrapper__top">
-          <h1 class="section__wrapper__top__title">Card Sets Management</h1>
+          <h1 class="section__wrapper__top__title">{{ $t('admin.sets.pageTitle') }}</h1>
           <el-button type="primary" class="section__wrapper__top__button" @click="createSet">
-            Create New Set
+            {{ $t('admin.sets.buttons.create') }}
           </el-button>
         </div>
         <div>
@@ -164,14 +179,24 @@ onMounted(() => loadSetsData());
           :default-sort="{ prop: 'name', order: 'descending' }"
           stripe
         >
-          <el-table-column prop="name" label="Set name" width="180" sortable />
-          <el-table-column prop="type" label="Set type" width="120" sortable />
-          <el-table-column prop="uuid" label="Set UUID" />
-          <el-table-column prop="nbOfCards" label="Nb. of cards" align="center" width="140" sortable />
-          <el-table-column fixed="right" label="Operations" width="180">
+          <el-table-column prop="name" :label="$t('admin.sets.table.labels.setName')" sortable />
+          <el-table-column prop="type" :label="$t('admin.sets.table.labels.setType')" width="180" sortable />
+          <el-table-column prop="uuid" label="UUID" />
+          <el-table-column
+            prop="nbOfCards"
+            :label="$t('admin.sets.table.labels.nbCards')"
+            align="center"
+            width="140"
+            sortable
+          />
+          <el-table-column fixed="right" :label="$t('admin.sets.table.labels.controls')" width="180">
             <template #default="scope">
-              <el-button link type="primary" size="small" @click="seeDetails"> Detail </el-button>
-              <el-button link type="primary" size="small" @click="deleteSet(scope.row.uuid)"> Delete </el-button>
+              <el-button link type="primary" size="small" @click="seeDetails">
+                {{ $t('admin.sets.table.buttons.details') }}
+              </el-button>
+              <el-button link type="primary" size="small" @click="deleteSet(scope.row.uuid)">
+                {{ $t('admin.sets.table.buttons.delete') }}
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -185,17 +210,21 @@ onMounted(() => loadSetsData());
   width: 80%;
   margin: auto;
 
+  &__navigation {
+    margin-top: $defaultMargin;
+    margin-bottom: $defaultMargin;
+  }
+
   &__wrapper {
     &__top {
       &__title,
       &__button {
-        margin-top: $defaultMargin !important;
+        margin-top: 0 !important;
       }
       display: flex;
       justify-content: space-between;
     }
 
-    margin-top: $defaultMargin * 3 !important;
     padding: 2 * $defaultMargin;
     border-radius: $defaultRadius;
     background-color: $white;

@@ -36,9 +36,8 @@ class HttpRequestService {
     }
   }
 
-  async put(path: string, queryParams = {}, bodyParams = {}): Promise<any> {
+  async put(path: string, bodyParams = {}): Promise<any> {
     const axiosConfig = {
-      params: queryParams,
       data: bodyParams,
     };
 
